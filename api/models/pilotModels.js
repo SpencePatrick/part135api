@@ -37,11 +37,8 @@ var PilotSchema = new Schema({
     type: Date,
   },
   faainsttype: {
-    type: [{
-      type: String,
-      enum: ['ME', 'SE']
-    }],
-    default: ['SE']
+    type: String
+
   },
   opsapproved: {
     type: String,

@@ -1,14 +1,14 @@
 'use strict';
 module.exports = function(app) {
-  var pilots = require('../controllers/pilotController');
-  var airplanes = require('../controllers/airplaneController');
-  var manifests = require('../controllers/manifestController');
-  var users = require('../controllers/userController');
-  var verifytoken = require('../middleware/verifytoken');
+  var pilots = require('../controllers/pilotController'),
+    airplanes = require('../controllers/airplaneController'),
+    manifests = require('../controllers/manifestController'),
+    users = require('../controllers/userController'),
+    verifytoken = require('../middleware/verifytoken');
   //pilot routes
   app.route('/pilots')
     .get(pilots.list_all_pilots)
-    .post(pilots.create_a_pilot);
+    .post(verifytoken, pilots.create_a_pilot);
 
 
   app.route('/pilots/:pilotId')
@@ -53,4 +53,7 @@ module.exports = function(app) {
     .get(users.read_a_user)
     .put(users.update_a_user)
     .delete(users.delete_a_user);
+
+  app.route('/user/verify')
+    .get(verifytoken, users.verify_token);
 };

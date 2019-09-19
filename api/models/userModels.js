@@ -26,9 +26,10 @@ var UserSchema = new Schema({
     lowerCase: true,
     match: [/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?      ^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/],
   },
-  // 0 = admin, 1 = mechanic, 2 = pilot
+  // 0 = admin, 1 = pilotandadmin, 2 = pilot, 3 = mechanic, 4 = mechanicaccess, 5 = bookkeeper
   permissions: {
-    type: [Number],
+    type: String,
+    default: "0"
   },
   password: {
     type: String,

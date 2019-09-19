@@ -1,5 +1,5 @@
 'use strict';
-var Token = require('../middleware/token').Token;
+var Token = require('../middleware/token');
 
 var mongoose = require('mongoose'),
   Users = mongoose.model('Users');
@@ -18,7 +18,6 @@ exports.create_a_user = function(req, res) {
       email: req.body.email,
       password,
     });
-    console.log(user);
 // check that user submits the required value
     if (!user.username || !user.email || !user.password) {
       return res.status(400).json({
@@ -43,7 +42,7 @@ exports.create_a_user = function(req, res) {
         .save()
         .then((newUser) => {
           console.log(newUser);
-          const token = Token(newUser);
+          const token = Token.token(newUser);
           res.status(201).json({
             message: 'User signup successfully',
             newUser: {
@@ -74,13 +73,14 @@ exports.user_login = function(req, res) {
           });
         }
         if (result) {
-          const token = Token(existingUser);
+          const token = Token.token(existingUser);
           return res.status(200).json({
             message: 'User authorization successful',
             existingUser: {
               username: existingUser.username,
               email: existingUser.email,
               _id: existingUser.id,
+              permissions: existingUser.permissions,
             },
             token,
           });
@@ -105,7 +105,7 @@ exports.list_all_users = function(req, res) {
 
 
 exports.read_a_user = function(req, res) {
-  Users.findById(req.params.UserId, function(err, user) {
+  Users.findById(req.params.userId, function(err, user) {
     if (err)
       res.send(err);
     res.json(user);
@@ -114,7 +114,7 @@ exports.read_a_user = function(req, res) {
 
 
 exports.update_a_user = function(req, res) {
-  Users.findOneAndUpdate({_id: req.params.UserId}, req.body, {new: true}, function(err, user) {
+  Users.findOneAndUpdate({_id: req.params.userId}, req.body, {new: true}, function(err, user) {
     if (err)
       res.send(err);
     res.json(user);
@@ -124,10 +124,14 @@ exports.update_a_user = function(req, res) {
 
 exports.delete_a_user = function(req, res) {
   Users.remove({
-    _id: req.params.UserId
+    _id: req.params.userId
   }, function(err, user) {
     if (err)
       res.send(err);
     res.json({ message: 'User successfully deleted' });
   });
 };
+
+exports.verify_token = function(req, res) {
+  res.json({ message: 'Verified!' });
+}
